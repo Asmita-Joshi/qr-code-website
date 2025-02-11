@@ -11,7 +11,25 @@
 <body>
     <h2>Scan the QR Code to Open Event Page</h2>
     <div id="qrcode"></div>
+    <br>
+    <button id="downloadBtn">Download QR Code</button>
 
+    <script>
+        let scanURL = "https://Asmita-Joshi.github.io/attendance/mark-attendance.html";
+        let qrcodeDiv = document.getElementById("qrcode");
+
+        document.getElementById("downloadBtn").addEventListener("click", function() {
+            let qrCanvas = qrcodeDiv.getElementsByTagName("canvas")[0];
+            let qrImage = qrCanvas.toDataURL("image/png");
+
+            let downloadLink = document.createElement("a");
+            downloadLink.href = qrImage;
+            downloadLink.download = "QR_Attendance.png";
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+        });
+    </script>
     <script>
         // URL of event.html (Replace with actual hosted link)
         var eventUrl = "https://Asmita-Joshi.github.io/qr-code-website/Event.html";
