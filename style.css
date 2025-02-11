@@ -1,12 +1,41 @@
-﻿body {
-    text-align: center;
+﻿/* General Page Styling */
+body {
     font-family: Arial, sans-serif;
-    margin-top: 50px;
+    text-align: center;
+    padding: 20px;
+    background-color: #f4f4f4;
 }
 
-#qrcode {
-    margin: 20px auto;
-    width: 256px;
-    height: 256px;
-    align-items:baseline;
+/* Header Styling */
+h1 {
+    color: #333;
+    margin-bottom: 20px;
 }
+
+/* QR Code Container */
+#qrcode {
+    display: inline-block;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Download Button Styling */
+button {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 12px 20px;
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+}
+
+    button:hover {
+        background-color: #0056b3;
+    }
