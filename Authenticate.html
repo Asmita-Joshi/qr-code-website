@@ -13,21 +13,28 @@
         import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
         import { db } from "./firebase.js";
 
-        // Get session ID from URL
         const urlParams = new URLSearchParams(window.location.search);
         const sessionId = urlParams.get("session");
 
-        // Update Firestore with authentication status
         async function authenticateUser() {
             if (!sessionId) {
                 alert("Invalid session.");
                 return;
             }
             await setDoc(doc(db, "sessions", sessionId), { status: "authenticated" });
+
+            // Redirect to Thank You page
             window.location.href = "https://Asmita-Joshi.github.io/qr-code-website/thank-you.html";
         }
 
         authenticateUser();
+
+        // When the user closes this page, reset session
+        window.addEventListener("beforeunload", async () => {
+            if (sessionId) {
+                await setDoc(doc(db, "sessions", sessionId), { status: "closed" });
+            }
+        });
     </script>
 </body>
 </html>
