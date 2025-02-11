@@ -17,6 +17,11 @@
         import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
         import { db } from "./firebase.js";
 
+        // Check if already authenticated
+        if (localStorage.getItem("authenticated") === "true") {
+            window.location.href = "thank-you.html";
+        }
+
         // Generate a unique session ID
         let sessionId = "session-" + Math.random().toString(36).substr(2, 9);
         let authURL = `https://Asmita-Joshi.github.io/qr-code-website/Authenticate.html?session=${sessionId}`;
@@ -34,8 +39,9 @@
         // Listen for authentication updates in Firestore
         onSnapshot(docRef, (docSnap) => {
             if (docSnap.exists() && docSnap.data().status === "authenticated") {
+                localStorage.setItem("authenticated", "true");  // Store authentication status
                 document.getElementById("status").innerText = "✅ Authentication Successful!";
-                setTimeout(() => window.location.href = "https://Asmita-Joshi.github.io/qr-code-website//thank-you.html", 2000);
+                setTimeout(() => window.location.href = "https://Asmita-Joshi.github.io/qr-code-website/thank-you.html", 2000);
             }
         });
 
