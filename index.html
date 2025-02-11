@@ -4,13 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QR Code Authentication</title>
-
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
-
-    <!-- QR Code Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <h2>Scan QR Code to Authenticate</h2>
@@ -18,61 +13,19 @@
     <p id="status">Waiting for scan...</p>
 
     <script>
-        console.log("🔹 Script is running...");
+        // Generate a unique session ID
+        let sessionId = "session-" + Math.random().toString(36).substr(2, 9);
+        let authURL = `https://your-username.github.io/qr-authentication/authenticate.html?session=${sessionId}`;
 
-        // 🔹 Your Firebase Config
-        const firebaseConfig = {
-    apiKey: "AIzaSyBY-C5jBWZZggIu_2klqL6fDeMLF6jdZXc",
-    authDomain: "qr-system-f5ffe.firebaseapp.com",
-    projectId: "qr-system-f5ffe",
-    storageBucket: "qr-system-f5ffe.firebasestorage.app",
-    messagingSenderId: "1049926600704",
-    appId: "1:1049926600704:web:ca197835a830bc6769b0e5",
-    measurementId: "G-QBBR7SYRMZ"
-  };
-
-        // 🔹 Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-        console.log("✅ Firebase initialized!");
-
-        // 🔹 Generate Unique Session ID
-        const sessionId = Math.random().toString(36).substring(2, 15);
-        console.log("📌 Session ID:", sessionId);
-
-        // 🔹 Firestore Reference
-        const sessionRef = db.collection("sessions").doc(sessionId);
-
-        // 🔹 Generate QR Code with session ID
-        const qrDiv = document.getElementById("qrcode");
-
-        try {
-            new QRCode(qrDiv, {
-                text: `https://your-website.com/authenticate.html?session=${sessionId}`,
-                width: 200,
-                height: 200
-            });
-            console.log("✅ QR Code Generated!");
-        } catch (error) {
-            console.error("❌ QR Code Error:", error);
-        }
-
-        // 🔹 Store session in Firestore
-        sessionRef.set({ status: "pending" }).then(() => {
-            console.log("✅ Session stored in Firestore.");
-        }).catch(error => {
-            console.error("❌ Firestore Error:", error);
+        // Generate QR Code
+        new QRCode(document.getElementById("qrcode"), {
+            text: authURL,
+            width: 256,
+            height: 256
         });
 
-        // 🔹 Listen for Authentication Status
-        sessionRef.onSnapshot((doc) => {
-            if (doc.exists && doc.data().status === "authenticated") {
-                console.log("✅ Authentication detected!");
-                document.getElementById("status").innerText = "✅ Authentication Successful!";
-                window.location.href = "thankyou.html";
-            }
-        });
-
+        // Listen for authentication updates (Firestore part in script.js)
     </script>
+    <script src="script.js"></script>
 </body>
 </html>

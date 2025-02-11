@@ -3,20 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Authentication</title>
-
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+    <title>Authenticating...</title>
 </head>
 <body>
     <h2>Authenticating...</h2>
-    <p>Please wait while we verify.</p>
 
-    <script>
-        console.log("🔹 Authentication Page Loaded!");
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-        // 🔹 Your Firebase Config
         const firebaseConfig = {
     apiKey: "AIzaSyBY-C5jBWZZggIu_2klqL6fDeMLF6jdZXc",
     authDomain: "qr-system-f5ffe.firebaseapp.com",
@@ -27,36 +22,20 @@
     measurementId: "G-QBBR7SYRMZ"
   };
 
-        // 🔹 Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
-        // 🔹 Get Session ID from URL
+        // Get session ID from URL
         const urlParams = new URLSearchParams(window.location.search);
         const sessionId = urlParams.get("session");
 
-        if (sessionId) {
-            console.log("📌 Session ID:", sessionId);
-
-            // 🔹 Update Firestore to "authenticated"
-            db.collection("sessions").doc(sessionId).update({
-                status: "authenticated"
-            }).then(() => {
-                console.log("✅ Authentication Successful!");
-                document.body.innerHTML = "<h2>✅ Authentication Successful!</h2>";
-
-                // Redirect to Thank You page after 2 seconds
-                setTimeout(() => {
-                    window.location.href = "thankyou.html";
-                }, 2000);
-            }).catch(error => {
-                console.error("❌ Firestore Update Error:", error);
-                document.body.innerHTML = "<h2>❌ Authentication Failed</h2>";
-            });
-        } else {
-            console.error("❌ No session ID found in URL!");
-            document.body.innerHTML = "<h2>❌ Invalid Request</h2>";
+        // Update Firestore with authentication status
+        async function authenticateUser() {
+            await setDoc(doc(db, "sessions", sessionId), { status: "authenticated" });
+            window.location.href = "thankyou.html";
         }
+
+        authenticateUser();
     </script>
 </body>
 </html>
