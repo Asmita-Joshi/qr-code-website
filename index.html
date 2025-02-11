@@ -5,33 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QR Code Generator</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <style>
-        body {
-            text-align: center;
-            font-family: Arial, sans-serif;
-            margin-top: 50px;
-        }
-
-        #qrcode {
-            margin: 20px auto;
-        }
-    </style>
 </head>
 <body>
-    <h2>Scan the QR Code</h2>
+    <h2>Scan this QR Code</h2>
     <div id="qrcode"></div>
 
     <script>
-        // Define the URL to open when the QR code is scanned
-        let url = "https://Asmita-Joshi.github.io/qr-code-website/thank-you.html";
-
+        // Define the thank you page URL
+        let url = "https://asmita-joshi.github.io/thank-you.html";  // Change this to your actual GitHub Pages URL
 
         // Generate QR Code
-        new QRCode(document.getElementById("qrcode"), {
+        let qrCode = new QRCode(document.getElementById("qrcode"), {
             text: url,
             width: 200,
             height: 200
         });
+
+        // Show thank-you message if the page is visited from a scan
+        if (window.location.href.includes("thank-you")) {
+            alert("Thank you for scanning the QR code!");
+        }
     </script>
 </body>
 </html>
