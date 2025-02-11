@@ -4,35 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Thank You</title>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
 </head>
 <body>
-    <h1>Thank You for Scanning!</h1>
-
-    <script>
-        // Your Firebase configuration (Same as before)
-        const firebaseConfig = {
-    apiKey: "AIzaSyBY-C5jBWZZggIu_2klqL6fDeMLF6jdZXc",
-    authDomain: "qr-system-f5ffe.firebaseapp.com",
-    projectId: "qr-system-f5ffe",
-    storageBucket: "qr-system-f5ffe.firebasestorage.app",
-    messagingSenderId: "1049926600704",
-    appId: "1:1049926600704:web:ca197835a830bc6769b0e5",
-    measurementId: "G-QBBR7SYRMZ"
-  };
-
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-
-        // Get session ID from URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const sessionID = urlParams.get("session");
-
-        if (sessionID) {
-            db.collection("sessions").doc(sessionID).update({ verified: true });
-        }
-    </script>
+    <h2>🎉 Thank You for Authenticating! 🎉</h2>
 </body>
 </html>
