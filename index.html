@@ -3,55 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR Code Redirect</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 20px;
-        }
-
-        #qrcode {
-            margin: 20px auto;
-        }
-
-        #thank-you-message {
-            display: none;
-            color: green;
-            font-size: 24px;
-        }
-    </style>
+    <title>QR Code Authentication</title>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
 </head>
 <body>
-
-    <h2>Scan this QR Code</h2>
+    <h1>Scan QR Code to Authenticate</h1>
     <div id="qrcode"></div>
-
-    <div id="thank-you-message">
-        <h1>🎉 Thank You for Scanning! 🎉</h1>
-        <p>We appreciate your visit.</p>
-    </div>
+    <h2 id="status">Waiting for scan...</h2>
 
     <script>
-        // Get the base website URL (your GitHub Pages link)
-        let websiteURL = window.location.origin + window.location.pathname + "?scanned=true";
+        // Your Firebase configuration (Replace with your own from Firebase Console)
+        const firebaseConfig = {
+    apiKey: "AIzaSyBY-C5jBWZZggIu_2klqL6fDeMLF6jdZXc",
+    authDomain: "qr-system-f5ffe.firebaseapp.com",
+    projectId: "qr-system-f5ffe",
+    storageBucket: "qr-system-f5ffe.firebasestorage.app",
+    messagingSenderId: "1049926600704",
+    appId: "1:1049926600704:web:ca197835a830bc6769b0e5",
+    measurementId: "G-QBBR7SYRMZ"
+  };
 
-        // Generate the QR Code linking to the same website with the scanned parameter
-        new QRCode(document.getElementById("qrcode"), {
-            text: websiteURL,
-            width: 200,
-            height: 200
-        });
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
 
-        // Detect if the URL contains "scanned=true"
-        let urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get("scanned") === "true") {
-            // Show Thank You message
-            document.getElementById("thank-you-message").style.display = "block";
-            alert("Thank you for scanning the QR code!");
-        }
+        // Generate a unique session ID
+        const sessionID = Math.random().toString(36).substring(2, 15);
+
+        // Save session to Firestore
+        db.collection("sessions").doc(sessionID).set({ verified: false });
+
+        // Generate QR code with session ID
+        new QRCode(document.getElementById("qrcode"), window.location.origin + "/thankyou.html?session=" + sessionID);
+
+        // Check Firestore for session verification
+        setInterval(() => {
+            db.collection("sessions").doc(sessionID).get().then((doc) => {
+                if (doc.exists && doc.data().verified) {
+                    document.getElementById("status").innerText = "Thank You! Session Verified.";
+                }
+            });
+        }, 2000);
     </script>
-
 </body>
 </html>
