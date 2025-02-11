@@ -5,33 +5,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QR Code Redirect</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+
+        #qrcode {
+            margin: 20px auto;
+        }
+
+        #thank-you-message {
+            display: none;
+            color: green;
+            font-size: 24px;
+        }
+    </style>
 </head>
 <body>
+
     <h2>Scan this QR Code</h2>
     <div id="qrcode"></div>
 
-    <div id="thank-you-message" style="display: none;">
-        <h1>Thank You for Scanning!</h1>
+    <div id="thank-you-message">
+        <h1>🎉 Thank You for Scanning! 🎉</h1>
         <p>We appreciate your visit.</p>
     </div>
 
     <script>
-        // Get the website URL
+        // Get the base website URL (your GitHub Pages link)
         let websiteURL = window.location.origin + window.location.pathname + "?scanned=true";
 
-        // Generate QR Code pointing to this website with a scanned parameter
+        // Generate the QR Code linking to the same website with the scanned parameter
         new QRCode(document.getElementById("qrcode"), {
             text: websiteURL,
             width: 200,
             height: 200
         });
 
-        // Check if the URL contains the 'scanned=true' parameter
+        // Detect if the URL contains "scanned=true"
         let urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.has("scanned")) {
+        if (urlParams.get("scanned") === "true") {
+            // Show Thank You message
             document.getElementById("thank-you-message").style.display = "block";
             alert("Thank you for scanning the QR code!");
         }
     </script>
+
 </body>
 </html>
