@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QR Code Authentication</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script type="module" src="firebase.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -12,7 +13,10 @@
     <div id="qrcode"></div>
     <p id="status">Waiting for scan...</p>
 
-    <script>
+    <script type="module">
+        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+        import { db } from "./firebase.js";
+
         // Generate a unique session ID
         let sessionId = "session-" + Math.random().toString(36).substr(2, 9);
         let authURL = `https://Asmita-Joshi.github.io/qr-code-website/Authenticate.html?session=${sessionId}`;
@@ -24,8 +28,23 @@
             height: 256
         });
 
-        // Listen for authentication updates (Firestore part in script.js)
+        // Firestore reference
+        const docRef = doc(db, "sessions", sessionId);
+
+        // Listen for authentication updates in Firestore
+        onSnapshot(docRef, (docSnap) => {
+            if (docSnap.exists() && docSnap.data().status === "authenticated") {
+                document.getElementById("status").innerText = "✅ Authentication Successful!";
+                setTimeout(() => window.location.href = "https://Asmita-Joshi.github.io/qr-code-website//thank-you.html", 2000);
+            }
+        });
+
+        // Store initial session in Firestore
+        async function createSession() {
+            await setDoc(docRef, { status: "waiting" });
+        }
+
+        createSession();
     </script>
-    <script src="script.js"></script>
 </body>
 </html>

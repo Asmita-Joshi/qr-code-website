@@ -4,26 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Authenticating...</title>
+    <script type="module" src="firebase.js"></script>
 </head>
 <body>
     <h2>Authenticating...</h2>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
         import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
-
-        const firebaseConfig = {
-    apiKey: "AIzaSyBY-C5jBWZZggIu_2klqL6fDeMLF6jdZXc",
-    authDomain: "qr-system-f5ffe.firebaseapp.com",
-    projectId: "qr-system-f5ffe",
-    storageBucket: "qr-system-f5ffe.firebasestorage.app",
-    messagingSenderId: "1049926600704",
-    appId: "1:1049926600704:web:ca197835a830bc6769b0e5",
-    measurementId: "G-QBBR7SYRMZ"
-  };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+        import { db } from "./firebase.js";
 
         // Get session ID from URL
         const urlParams = new URLSearchParams(window.location.search);
@@ -31,8 +19,12 @@
 
         // Update Firestore with authentication status
         async function authenticateUser() {
+            if (!sessionId) {
+                alert("Invalid session.");
+                return;
+            }
             await setDoc(doc(db, "sessions", sessionId), { status: "authenticated" });
-            window.location.href = "https://Asmita-Joshi.github.io/qr-code-website//thank-you.html";
+            window.location.href = "https://Asmita-Joshi.github.io/qr-code-website/thank-you.html";
         }
 
         authenticateUser();
