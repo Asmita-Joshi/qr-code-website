@@ -6,10 +6,9 @@
     <title>QR Code Authentication</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script type="module" src="firebase.js"></script>
-    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h2>Scan QR Code to Authenticate</h2>
+    <h1>Scan QR Code to Authenticate</h1>
     <div id="qrcode"></div>
     <p id="status">Waiting for scan...</p>
 
@@ -20,9 +19,8 @@
         let sessionId = localStorage.getItem("sessionId") || "session-" + Math.random().toString(36).substr(2, 9);
         localStorage.setItem("sessionId", sessionId);
 
-        let authURL = `https://Asmita-Joshi.github.io/qr-code-website/Authenticate.html?session=${sessionId}`;
+        let authURL = `https://asmita-joshi.github.io/qr-code-website/authenticate.html?session=${sessionId}`;
 
-        // Generate QR Code
         new QRCode(document.getElementById("qrcode"), {
             text: authURL,
             width: 256,
@@ -31,18 +29,15 @@
 
         const docRef = doc(db, "sessions", sessionId);
 
-        // Listen for authentication updates in Firestore
+        // Listen for authentication status
         onSnapshot(docRef, (docSnap) => {
             if (docSnap.exists()) {
                 let status = docSnap.data().status;
 
                 if (status === "authenticated") {
-                    localStorage.setItem("authenticated", "true");
                     document.getElementById("status").innerText = "✅ Authentication Successful!";
                     setTimeout(() => window.location.href = "https://Asmita-Joshi.github.io/qr-code-website/thank-you.html", 2000);
-                }
-                else if (status === "closed") {
-                    // Reset session and reload scanner page when mobile closes
+                } else if (status === "closed") {
                     localStorage.removeItem("authenticated");
                     localStorage.removeItem("sessionId");
                     window.location.reload();
@@ -50,7 +45,7 @@
             }
         });
 
-        // Store initial session in Firestore
+        // Initialize Firestore session
         async function createSession() {
             await setDoc(docRef, { status: "waiting" });
         }

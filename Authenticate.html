@@ -7,34 +7,25 @@
     <script type="module" src="firebase.js"></script>
 </head>
 <body>
-    <h2>Authenticating...</h2>
+    <h1>Authenticating...</h1>
 
     <script type="module">
-        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+        import { getFirestore, doc, updateDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
         import { db } from "./firebase.js";
 
         const urlParams = new URLSearchParams(window.location.search);
-        const sessionId = urlParams.get("session");
+        const sessionId = urlParams.get('session');
 
-        async function authenticateUser() {
-            if (!sessionId) {
-                alert("Invalid session.");
-                return;
-            }
-            await setDoc(doc(db, "sessions", sessionId), { status: "authenticated" });
+        if (sessionId) {
+            const docRef = doc(db, "sessions", sessionId);
 
-            // Redirect to Thank You page
-            window.location.href = "https://Asmita-Joshi.github.io/qr-code-website/thank-you.html";
+            // Update Firestore to mark as authenticated
+            updateDoc(docRef, { status: "authenticated" }).then(() => {
+                setTimeout(() => {
+                    window.location.href = "https://Asmita-Joshi.github.io/qr-code-website/thank-you.html";
+                }, 2000);
+            });
         }
-
-        authenticateUser();
-
-        // When the user closes this page, reset session
-        window.addEventListener("beforeunload", async () => {
-            if (sessionId) {
-                await setDoc(doc(db, "sessions", sessionId), { status: "closed" });
-            }
-        });
     </script>
 </body>
 </html>
