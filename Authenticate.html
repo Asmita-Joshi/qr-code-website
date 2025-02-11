@@ -32,7 +32,7 @@
         // Update Firestore with authentication status
         async function authenticateUser() {
             await setDoc(doc(db, "sessions", sessionId), { status: "authenticated" });
-            window.location.href = "thankyou.html";
+            window.location.href = "/thank-you.html";
         }
 
         authenticateUser();
